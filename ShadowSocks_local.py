@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #!encoding:utf-8
 #!filename:ShadowSocks_local.py
 
@@ -77,7 +77,7 @@ class Socks5Server(SocketServer.StreamRequestHandler):
                         break
                     result = send_all(remote, data)
                     if result < len(data):
-                        raise Exception('数据发送失败')
+                        raise Exception('Failed to send data')
 
                 if remote in r:
                     data = self.decrypt(remote.recv(4096))
@@ -85,7 +85,7 @@ class Socks5Server(SocketServer.StreamRequestHandler):
                         break
                     result = send_all(sock, data)
                     if result < len(data):
-                        raise Exception('数据发送失败')
+                        raise Exception('Failed to send data')
         finally:
             sock.close()
             remote.close()
@@ -148,7 +148,7 @@ class Socks5Server(SocketServer.StreamRequestHandler):
 
 
 def main():
-    print ('欢迎使用Time-Machine Shadowsocks多链接客户端')
+    print ('Time-Machine Multi-Connection Shadowsocks Client')
     global SERVER, REMOTE_PORT, PORT, KEY, METHOD, LOCAL, IPv6
     
     logging.basicConfig(level=logging.DEBUG,
@@ -184,11 +184,11 @@ def main():
         with open(config_path, 'rb') as f:
             config = json.load(f)
 
-            #判断config.json中是否包含了"server_password"来确定是否启用了多端口
+            #判断 config.json 中是否包含了 "server_password" 来确定是否启用了多端口
             if config.has_key("server_password") == True:
-                #获得"server_password"的长度,得到服务器端口记录
+                #获得 "server_password" 的长度,得到服务器端口记录
                 number = len(config["server_password"]) 
-                #通过random来随机分配用哪一条服务器端口密码记录
+                #通过 random 来随机分配用哪一条服务器端口密码记录
                 orientation = random.randint(0, number - 1) 
                 server_dict = {}
                 server_dict[u"server"]= config["server_password"][orientation][0]
@@ -231,7 +231,7 @@ def main():
 
 
     if not KEY and not config_path:
-        sys.exit('定义失败')
+        sys.exit('Invalid Config')
 
     utils.check_config(config)
         
@@ -241,8 +241,8 @@ def main():
         if IPv6:
             ThreadingTCPServer.address_family = socket.AF_INET6
         server = ThreadingTCPServer((LOCAL, PORT), Socks5Server)
-        logging.info("存在的远端服务器 %s:%d" %(SERVER, REMOTE_PORT))
-        logging.info("套接字启动链接 %s:%d" % tuple(server.server_address[:2]))
+        logging.info("Remote server %s:%d" %(SERVER, REMOTE_PORT))
+        logging.info("Starting local at %s:%d" % tuple(server.server_address[:2]))
         server.serve_forever()
     except socket.error, e:
         logging.error(e)
