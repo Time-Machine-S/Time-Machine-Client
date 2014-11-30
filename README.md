@@ -1,9 +1,9 @@
 ShadowSocks Client For Time-Machine
 ==================
 
-shadowsocks 是一个轻量级隧道代理，用来穿过防火墙。
+ShadowSocks 是一个轻量级隧道代理，用来穿过防火墙。
 
-第一个版本由 clowwindy 用 Python 编写，后续有很多其他的移植版本。[见这里](https://github.com/clowwindy/shadowsocks)
+原版由 clowwindy 用 Python 编写，后续有很多其他的移植版本。[见这里](https://github.com/clowwindy/shadowsocks)
 
 但是由于服务需要于是将其改版，支持多服务器链接
 
@@ -28,7 +28,7 @@ shadowsocks 是一个轻量级隧道代理，用来穿过防火墙。
         "server_port":10086,
         "local_port":1080,
         "password":"barfoo!",
-        "timeout":600,
+        "timeout":300,
         "method":"table"
     }
     
@@ -46,7 +46,7 @@ shadowsocks 是一个轻量级隧道代理，用来穿过防火墙。
         ["my_server_ip4", 10089, "barfoosadfs!abcde"]
         ],
         "local_port":1080,
-        "timeout":600,
+        "timeout":300,
         "method":"aes-256-cfb"
     }
 
@@ -57,6 +57,6 @@ shadowsocks 是一个轻量级隧道代理，用来穿过防火墙。
 
 然后把浏览器代理修改为如下即可：
 
-        协议：socks5
+        协议：SOCKS v5
         地址：127.0.0.1
         端口：1080, 也就是刚才填写的 local_port
