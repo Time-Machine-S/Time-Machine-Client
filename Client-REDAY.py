@@ -4,6 +4,7 @@ import hashlib
 import json
 import urllib
 import urllib2
+import httplib
 print ('Welcome to use Time-Machine Client For Python')
 user=raw_input('请输入您的用户名:')
 password=raw_input('请输入您的密码:')
@@ -12,18 +13,27 @@ list= {
         'user' : user ,
         'password' : password
         }
-json=json.dumps(list)
-send=json+key
+json_s=json.dumps(list)
+send=json_s+key
 hash=hashlib.md5()
 hash.update(send)
-hash.hexdigest()
-req_url="http://www.time-machine.tk/api/client-login"
+hash=hash.hexdigest()
+req_url="http://192.168.0.75/test.php"
 send_data= {
-            'data':data,
+            'data':json_s,
             'hash':hash
             }
 send_data_urlencode=urllib.urlencode(send_data)
-connection=httplib.HTTPConnection("www.time-machine.tk")
-connection.request(method="POST",url=req_url,body=send_data_urlencode) 
-response=connection.getresponse()
-response_read=response.read()
+req=urllib2.Request(req_url, send_data_urlencode)
+res=urllib2.urlopen(req)
+result=res.read()
+result=json.load(result)
+if result["code"] == '-1'
+    print 'Login Error'
+    webbrowser.open("www.Time-Machine.tk")
+    return 0
+result=json.load(result["data"])
+ss_password=result['password']
+ss_port=result['port']
+os.system("readin.exe %s %s %s" % (ss_password,ss_port))
+os.system("ShadowSocks_local.py")
