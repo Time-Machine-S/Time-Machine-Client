@@ -39,6 +39,11 @@ except ImportError:
 
 import socket
 import select
+import urllib
+import urllib2
+import thread
+import time
+import httplib
 import SocketServer
 import struct
 import os
@@ -145,8 +150,24 @@ class Socks5Server(SocketServer.StreamRequestHandler):
             self.handle_tcp(sock, remote)
         except socket.error, e:
             logging.warn(e)
-
-
+def heart_beat():
+    hours=0
+    req_url="http://192.168.0.75/test.php"
+    logging.info('Loading Config From %s' % config_path)
+        with open(config_path, 'rb') as f:
+            config = json.load(f)
+            PORT = config["server_port"]
+    send_data_urlencode=urllib.urlencode(PORT)
+    req=urllib2.Request(req_url, send_data_urlencode)
+    res=urllib2.urlopen(req)
+    result=res.read()
+    result=json.load(result):
+    if result["code"] == '-1'
+        print "Error.余额不足或系统错误"
+        sys.exit(0)
+    print "当前使用时间",result["hours"],"小时"
+    thread.exit_thread()
+    
 def main():
     print ('Time-Machine Multi-Connection Shadowsocks Client')
     global SERVER, REMOTE_PORT, PORT, KEY, METHOD, LOCAL, IPv6
@@ -191,14 +212,14 @@ def main():
                 #通过 random 来随机分配用哪一条服务器端口密码记录
                 orientation = random.randint(0, number - 1) 
                 server_dict = {}
-                server_dict[u"server"]= config["server_password"][orientation][0]
-                server_dict[u"server_port"] = config["server_password"][orientation][1]
-                server_dict[u"password"] = config["server_password"][orientation][2]
-                server_dict[u"local_port"] = config["local_port"]
-                server_dict[u"method"] = config["method"]
-                server_dict[u"timeout"] = config["timeout"]
+                server_dict[u"服务器\server"]= config["server_password"][orientation][0]
+                server_dict[u"链接端口\server_port"] = config["server_password"][orientation][1]
+                server_dict[u"密码\password"] = config["server_password"][orientation][2]
+                server_dict[u"本地端口\local_port"] = "1080"
+                server_dict[u"链接方法\method"] = "AES-256-CFB"
+                server_dict[u"超时\\timeout"] = "300"
                 config = server_dict
-                #print config
+                print config
 
             #else:
             #    print config
@@ -251,4 +272,7 @@ def main():
         sys.exit(0)
         
 if __name__ == '__main__':
-    main()
+     thread.start_new_thread(main)
+     while():
+        thread.start_new_thread(heart_beat)
+        sleep(3600)
